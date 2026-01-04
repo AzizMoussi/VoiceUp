@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'core/config/app_config.dart';
 import 'providers/auth_provider.dart';
 import 'providers/chat_provider.dart';
 import 'presentation/screens/auth/login_screen.dart';
@@ -11,15 +13,18 @@ import 'core/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
   // Initialize Firebase
   try {
     await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyDom5rOFV6omlcsWIGuo7e71jyWMvr1EcU",
-        projectId: "voiceup-2718a",
-        messagingSenderId: "966451651200",
-        appId: "1:966451651200:web:8fe4f8072f4c039397bc65",
-        storageBucket: "voiceup-2718a.firebasestorage.app",
+      options: FirebaseOptions(
+        apiKey: AppConfig.firebaseApiKey,
+        projectId: AppConfig.firebaseProjectId,
+        messagingSenderId: AppConfig.firebaseMessagingSenderId,
+        appId: AppConfig.firebaseAppId,
+        storageBucket: AppConfig.firebaseStorageBucket,
       ),
     );
   } catch (e) {
@@ -28,9 +33,8 @@ void main() async {
 
   // Initialize Supabase
   await Supabase.initialize(
-    url: 'https://kuzcitbdnqscjauxszgk.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1emNpdGJkbnFzY2phdXhzemdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc0ODA2NzgsImV4cCI6MjA4MzA1NjY3OH0.ttL4nIgo-AXawUleLB0WebGKqP85j5DH-NuaR8VUnts',
+    url: AppConfig.supabaseUrl,
+    anonKey: AppConfig.supabaseAnonKey,
   );
 
   runApp(const MyApp());
